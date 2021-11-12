@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { TextureLoader } from 'three';
+import { Sphere, SphereGeometry, TextureLoader } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
@@ -27,9 +27,28 @@ const starMesh = new THREE.Mesh(starGeometry, starMaterial);
 scene.add(starMesh);
 
 var venus;
+const venusMap = new TextureLoader().load('textures/venusmap.jpg');
+venusMap.encoding = THREE.sRGBEncoding;
+venusMap.flipY = false;
+
+const venusDisMap = new TextureLoader().load('textures/venusbump.jpg');
+venusDisMap.encoding = THREE.sRGBEncoding;
+venusDisMap.flipY = false;
+
 const loader = new GLTFLoader();
 loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
         venus = gltf.scene;
+        venus.traverse((o) => {
+            if (o.isMesh) {
+                o.material.map = venusMap;
+                o.material.displacementMap = venusDisMap;
+                o.material.displacementScale = 1;
+                o.material.needsUpdate = true;
+                console.log(o.material);
+                console.log(venusDisMap);
+            }
+        });
+
         scene.add(venus);
     },
     (xhr) => {
@@ -39,6 +58,16 @@ loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
         console.log(error);
     }
 );
+
+const fogTexture = new TextureLoader().load('textures/fog.png');
+const fogGeometry = new SphereGeometry(505, 505, 505);
+const fogMaterial = new THREE.MeshPhongMaterial({
+    map: fogTexture,
+    transparent: true,
+    opacity: 0.3
+});
+const fogMesh = new THREE.Mesh(fogGeometry, fogMaterial);
+scene.add(fogMesh);
 
 const ambientlight = new THREE.AmbientLight(0xffffff);
 scene.add(ambientlight);
@@ -52,23 +81,16 @@ scene.add(ambientlight);
 //const Helper = new THREE.PointLightHelper(pointLight);
 //scene.add(Helper);
 
-const fogTexture = new TextureLoader().load('textures/fog.png');
-const fogGeometry = new THREE.SphereGeometry(500, 500, 500);
-const fogMaterial = new THREE.MeshPhongMaterial({
-    map: fogTexture,
-    transparent: true,
-});
-const fogMesh = new THREE.Mesh(fogGeometry, fogMaterial);
-//scene.add(fogMesh);
-
+const PSPLoader = new GLTFLoader();
 
 function animate() {
     requestAnimationFrame(animate);
 
-    starMesh.rotation.y -= 0.002;
+    starMesh.rotation.y -= 0.001;
     if (venus) {
-        venus.rotation.y -= 0.001;
+        venus.rotation.y -= 0.00055;
     }
+    fogMesh.rotation.y -= 0.0015;
    
 
     controls.update();
