@@ -8,7 +8,8 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,45,30000);
 camera.position.set(-900,-900,-900);
 
-const renderer = new THREE.WebGLRenderer({antialias:true});
+const renderer = new THREE.WebGLRenderer({
+    antialias:true });
 renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -35,6 +36,11 @@ const venusDisMap = new TextureLoader().load('textures/venusbump.jpg');
 venusDisMap.encoding = THREE.sRGBEncoding;
 venusDisMap.flipY = false;
 
+const objects = [];
+const PSPOrbit = new THREE.Object3D();
+//scene.add(PSPOrbit);
+//objects.push(PSPOrbit);
+
 const loader = new GLTFLoader();
 loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
         venus = gltf.scene;
@@ -50,13 +56,33 @@ loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
         });
 
         scene.add(venus);
+        //PSPOrbit.add(venus);
+        //objects.push(venus);
     },
-    (xhr) => {
+    function (xhr) {
         console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
     },
-    (error) => {
+    function (error) {
         console.log(error);
     }
+);
+
+var PSP;
+loader.load('3D-resource/PSP.glb', function (gltf) {
+    PSP = gltf.scene;
+    PSP.scale.set(25, 25, 25);
+    PSP.position.set(750, 0, 0);
+
+    scene.add(PSP);
+    //PSPOrbit.add(PSP);
+    //objects.push(PSP);
+},
+function (xhr) {
+    console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+},
+function (error) {
+    console.log(error);
+}
 );
 
 const fogTexture = new TextureLoader().load('textures/fog.png');
@@ -72,16 +98,25 @@ scene.add(fogMesh);
 const ambientlight = new THREE.AmbientLight(0xffffff);
 scene.add(ambientlight);
 
-// point light
-//const pointLight = new THREE.PointLight(0xffffff, 1)
-//pointLight.position.set(10000, 10000, 10000);
-//scene.add(pointLight);
+const spotLight = new THREE.SpotLight( 0xffffff, 25, 300, 100);
+spotLight.position.set( 750, 200, 0 );
+spotLight.castShadow = true;
+spotLight.shadow.mapSize.width = 1024;
+spotLight.shadow.mapSize.height = 1024;
+spotLight.shadow.camera.near = 500;
+spotLight.shadow.camera.far = 4000;
+spotLight.shadow.camera.fov = 30;
+spotLight.target.position.set(750, 0, 0);
+spotLight.target.updateMatrixWorld();
+scene.add(spotLight);
+scene.add(spotLight.target);
+//PSPOrbit.add(spotLight);
+//objects.push(spotLight);
+//PSPOrbit.add(spotLight.target);
+//objects.push(spotLight.target);
 
-// point light helper
-//const Helper = new THREE.PointLightHelper(pointLight);
-//scene.add(Helper);
-
-const PSPLoader = new GLTFLoader();
+const helper = new THREE.SpotLightHelper(spotLight);
+//scene.add(helper);
 
 function animate() {
     requestAnimationFrame(animate);
@@ -98,7 +133,14 @@ function animate() {
     render();
 }
 
+var time;
 function render() {
+    time *= 0.001;
+
+    objects.forEach((obj) => {
+        obj.rotation.y = time;
+      });
+    
     renderer.render(scene, camera);
 }
 
