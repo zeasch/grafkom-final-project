@@ -2,11 +2,12 @@ import * as THREE from 'three';
 import { Sphere, SphereGeometry, TextureLoader } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import SpriteText from 'three-spritetext';
 
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,45,30000);
-camera.position.set(-1250,-1250,-1250);
+camera.position.set(-1275,-1275,-1275);
 
 const renderer = new THREE.WebGLRenderer({
     antialias:true });
@@ -127,6 +128,12 @@ const helper = new THREE.SpotLightHelper(spotLight);
 //var r = 35;
 //var theta = 0;
 //var dTheta = 2 * Math.PI / 1000;
+
+const SimpleText = new SpriteText('Parker Solar Probe', 20);
+    SimpleText.color = 'lightgray';
+    SimpleText.position.x = 1100;
+    SimpleText.position.y = 115;
+    pivot1.add(SimpleText);
 
 function animate() {
     requestAnimationFrame(animate);
