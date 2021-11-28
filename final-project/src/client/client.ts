@@ -38,13 +38,17 @@ const venusDisMap = new TextureLoader().load('textures/venusbump.jpg');
 venusDisMap.encoding = THREE.sRGBEncoding;
 venusDisMap.flipY = false;
 
-const PSPOrbit = new THREE.Object3D();
-scene.add(PSPOrbit);
+const Orbit = new THREE.Object3D();
+scene.add(Orbit);
 
 var pivot1 = new THREE.Object3D();
 pivot1.rotation.y = 0;
 
-PSPOrbit.add( pivot1 );
+var pivot2 = new THREE.Object3D();
+pivot1.rotation.y = 100;
+
+Orbit.add(pivot1);
+Orbit.add(pivot2);
 
 const loader = new GLTFLoader();
 loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
@@ -144,7 +148,7 @@ var element = document.getElementById('button');
 
 var sun;
 const sunLoader = new GLTFLoader();
-loader.load('3D-resource/Sun.glb', function(gltf) {
+sunLoader.load('3D-resource/Sun.glb', function(gltf) {
         sun = gltf.scene;
         scene.add(sun);
     },
@@ -169,6 +173,23 @@ var sunGeometry = new THREE.SphereGeometry(575, 100, 100);
 var sunGlow = new THREE.Mesh(sunGeometry, sunCustomMaterial);
 scene.add(sunGlow);
 
+var mercury;
+const mercuryLoader = new GLTFLoader();
+loader.load('3D-resource/Mercury.glb', function(gltf) {
+        mercury = gltf.scene;
+        mercury.scale.set(90, 90, 90);
+        mercury.position.set(-2000, 0, -2000);
+        
+        pivot2.add(mercury);
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
 function animate() {
     requestAnimationFrame(animate);
 
@@ -178,7 +199,7 @@ function animate() {
     }
     fogMesh.rotation.y -= 0.00065;
 
-    PSPOrbit.rotation.y += 0.00025;
+    Orbit.rotation.y += 0.00025;
 
     if (sun) {
         sun.rotation.y -= 0.00025;
