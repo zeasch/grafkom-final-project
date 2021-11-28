@@ -3,11 +3,12 @@ import { Sphere, SphereGeometry, TextureLoader } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import SpriteText from 'three-spritetext';
+import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer'
 
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,45,30000);
-camera.position.set(-4500, 500, -4500);
+camera.position.set(-4500, 0, -4500);
 
 const renderer = new THREE.WebGLRenderer({
     antialias:true });
@@ -59,8 +60,11 @@ loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
                 console.log(venusDisMap);
             }
         });
+        venus.name = 'venus';
+        //venus.userData.isContainer = true
 
         scene.add(venus);
+        
     },
     function (xhr) {
         console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
@@ -96,7 +100,7 @@ const fogMaterial = new THREE.MeshPhongMaterial({
 });
 const fogMesh = new THREE.Mesh(fogGeometry, fogMaterial);
 fogMesh.position.set(-3000, 0, -3000);
-scene.add(fogMesh);
+//scene.add(fogMesh);
 
 const ambientlight = new THREE.AmbientLight(0xffffff);
 scene.add(ambientlight);
@@ -118,15 +122,24 @@ pivot1.add(spotLight.target);
 const helper = new THREE.SpotLightHelper(spotLight);
 //pivot1.add(helper);
 
-const SimpleText = new SpriteText('Parker Solar Probe', 20);
-    SimpleText.color = 'lightgray';
-    SimpleText.position.x = -1050;
-    SimpleText.position.y = 75;
-    SimpleText.position.z = -1000;
-    pivot1.add(SimpleText);
+const SimpleText = new SpriteText('Parker Solar Probe', 50);
+SimpleText.color = 'lightgray';
+SimpleText.position.x = -1050;
+SimpleText.position.y = 75;
+SimpleText.position.z = -1000;
+pivot1.add(SimpleText);
 
 const axesHelper = new THREE.AxesHelper( 1000 );
 scene.add( axesHelper );
+
+const venusText = new SpriteText('Venus', 50);
+venusText.color = 'lightgray';
+venusText.position.x = -3250;
+venusText.position.y = 535;
+venusText.position.z = -3000;
+scene.add(venusText);
+
+var element = document.getElementById('button');
 
 function animate() {
     requestAnimationFrame(animate);
