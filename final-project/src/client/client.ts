@@ -21,7 +21,7 @@ controls.minDistance = 10;
 controls.maxDistance = 10000;
 
 const starTexture = new TextureLoader().load('textures/galaxy.png');
-const starGeometry = new THREE.SphereGeometry(5000, 2500, 2500);
+const starGeometry = new THREE.SphereGeometry(5000, 100, 100);
 const starMaterial = new THREE.MeshBasicMaterial({
   map : starTexture,
   side: THREE.BackSide
@@ -92,7 +92,7 @@ function (error) {
 );
 
 const fogTexture = new TextureLoader().load('textures/fog.png');
-const fogGeometry = new SphereGeometry(505, 505, 505);
+const fogGeometry = new SphereGeometry(505, 100, 100);
 const fogMaterial = new THREE.MeshPhongMaterial({
     map: fogTexture,
     transparent: true,
@@ -100,7 +100,7 @@ const fogMaterial = new THREE.MeshPhongMaterial({
 });
 const fogMesh = new THREE.Mesh(fogGeometry, fogMaterial);
 fogMesh.position.set(-3000, 0, -3000);
-//scene.add(fogMesh);
+scene.add(fogMesh);
 
 const ambientlight = new THREE.AmbientLight(0xffffff);
 scene.add(ambientlight);
@@ -140,17 +140,49 @@ venusText.position.z = -3000;
 scene.add(venusText);
 
 var element = document.getElementById('button');
+//element.addEventListener("click", fungsianimasi)
+
+var sun;
+const sunLoader = new GLTFLoader();
+loader.load('3D-resource/Sun.glb', function(gltf) {
+        sun = gltf.scene;
+        scene.add(sun);
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
+var sunCustomMaterial = new THREE.ShaderMaterial({
+    uniforms: { },
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragmentShader').textContent,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true
+    
+});
+var sunGeometry = new THREE.SphereGeometry(575, 100, 100);
+var sunGlow = new THREE.Mesh(sunGeometry, sunCustomMaterial);
+scene.add(sunGlow);
 
 function animate() {
     requestAnimationFrame(animate);
 
-    starMesh.rotation.y -= 0.001;
+    starMesh.rotation.y -= 0.0005;
     if (venus) {
-        venus.rotation.y -= 0.00075;
+        venus.rotation.y -= 0.00025;
     }
-    fogMesh.rotation.y -= 0.0015;
+    fogMesh.rotation.y -= 0.00065;
 
-    PSPOrbit.rotation.y += 0.0025;
+    PSPOrbit.rotation.y += 0.00025;
+
+    if (sun) {
+        sun.rotation.y -= 0.00025;
+    }
     
     controls.update();
 
