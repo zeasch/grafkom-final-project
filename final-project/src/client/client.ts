@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Sphere, SphereGeometry, TextureLoader } from 'three';
+import { Sphere, SphereGeometry, TetrahedronBufferGeometry, TextureLoader } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import SpriteText from 'three-spritetext';
@@ -8,7 +8,7 @@ import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRe
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,45,30000);
-camera.position.set(-4500, 0, -4500);
+camera.position.set(-1000, 0, 5000);
 
 const renderer = new THREE.WebGLRenderer({
     antialias:true });
@@ -19,9 +19,10 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.addEventListener('change', () => console.log("Controls Change"));
 controls.minDistance = 10;
 controls.maxDistance = 10000;
+controls.enableDamping = true;
 
 const starTexture = new TextureLoader().load('textures/galaxy.png');
-const starGeometry = new THREE.SphereGeometry(5000, 100, 100);
+const starGeometry = new THREE.SphereGeometry(6000, 100, 100);
 const starMaterial = new THREE.MeshBasicMaterial({
   map : starTexture,
   side: THREE.BackSide
@@ -45,7 +46,7 @@ var pivot1 = new THREE.Object3D();
 pivot1.rotation.y = 0;
 
 var pivot2 = new THREE.Object3D();
-pivot1.rotation.y = 100;
+pivot2.rotation.y = 100;
 
 Orbit.add(pivot1);
 Orbit.add(pivot2);
@@ -53,12 +54,12 @@ Orbit.add(pivot2);
 const loader = new GLTFLoader();
 loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
         venus = gltf.scene;
-        venus.position.set(-3000, 0, -3000);
+        venus.position.set(-3500, 0, -3500);
         venus.traverse((o) => {
             if (o.isMesh) {
                 o.material.map = venusMap;
-                o.material.displacementMap = venusDisMap;
-                o.material.displacementScale = 1;
+                o.material.bumpMap = venusDisMap;
+                o.material.bumpScale = 0.015;
                 o.material.needsUpdate = true;
                 console.log(o.material);
                 console.log(venusDisMap);
@@ -104,7 +105,7 @@ const fogMaterial = new THREE.MeshPhongMaterial({
 });
 const fogMesh = new THREE.Mesh(fogGeometry, fogMaterial);
 fogMesh.position.set(-3000, 0, -3000);
-scene.add(fogMesh);
+//scene.add(fogMesh);
 
 const ambientlight = new THREE.AmbientLight(0xffffff);
 scene.add(ambientlight);
@@ -138,18 +139,30 @@ scene.add( axesHelper );
 
 const venusText = new SpriteText('Venus', 50);
 venusText.color = 'lightgray';
-venusText.position.x = -3250;
+venusText.position.x = -3600;
 venusText.position.y = 535;
-venusText.position.z = -3000;
+venusText.position.z = -3500;
 scene.add(venusText);
 
 var element = document.getElementById('button');
 //element.addEventListener("click", fungsianimasi)
 
 var sun;
+const sunTexture = new TextureLoader().load('textures/sun-texture.jpg');
+sunTexture.encoding = THREE.sRGBEncoding;
+sunTexture.flipY = false;
+
 const sunLoader = new GLTFLoader();
 sunLoader.load('3D-resource/Sun.glb', function(gltf) {
         sun = gltf.scene;
+        sun.traverse((s) => {
+            if (s.isMesh) {
+                s.material.map = sunTexture;
+                s.material.needsUpdate = true;
+                console.log(s.material);
+                console.log(sunTexture);
+            }
+        });
         scene.add(sun);
     },
     function (xhr) {
@@ -174,11 +187,28 @@ var sunGlow = new THREE.Mesh(sunGeometry, sunCustomMaterial);
 scene.add(sunGlow);
 
 var mercury;
-const mercuryLoader = new GLTFLoader();
+const mercuryMap = new TextureLoader().load('textures/mercury-texture.jpg');
+mercuryMap.encoding = THREE.sRGBEncoding;
+//mercuryMap.flipY = false;
+
+const mercuryBumpMap = new TextureLoader().load('textures/mercurybump.jpg');
+mercuryBumpMap.encoding = THREE.sRGBEncoding;
+mercuryBumpMap.flipY = false;
+
+//const mercuryLoader = new GLTFLoader();
 loader.load('3D-resource/Mercury.glb', function(gltf) {
         mercury = gltf.scene;
-        mercury.scale.set(90, 90, 90);
+        //mercury.scale.set(90, 90, 90);
         mercury.position.set(-2000, 0, -2000);
+        mercury.traverse((m) => {
+            if (m.isMesh) {
+                //m.material.map = mercuryMap;
+                //m.material.bumpMap = mercuryBumpMap;
+                m.material.bumpScale = 0.015;
+                m.material.needsUpdate = true;
+                console.log(m.material);
+            }
+        });
         
         pivot2.add(mercury);
     },
@@ -189,6 +219,37 @@ loader.load('3D-resource/Mercury.glb', function(gltf) {
         console.log(error);
     }
 );
+
+const mercuryText = new SpriteText('Mercury', 50);
+mercuryText.color = 'lightgray';
+mercuryText.position.x = -2250;
+mercuryText.position.y = 550;
+mercuryText.position.z = -2000;
+pivot2.add(mercuryText);
+
+const sunText = new SpriteText('Sun', 50);
+sunText.color = 'lightgray';
+sunText.position.x = 500;
+sunText.position.y = 535;
+sunText.position.z = 0;
+scene.add(sunText);
+
+const mercuryLight = new THREE.SpotLight(0xffffff, 25, 400, 200);
+mercuryLight.position.set(-2000, 700, -2000);
+mercuryLight.castShadow = true;
+mercuryLight.shadow.mapSize.width = 1024;
+mercuryLight.shadow.mapSize.height = 1024;
+mercuryLight.shadow.camera.near = 500;
+mercuryLight.shadow.camera.far = 4000;
+mercuryLight.shadow.camera.fov = 30;
+mercuryLight.target.position.set(-2000, 0, -2000);
+mercuryLight.target.updateMatrixWorld();
+
+//scene.add(mercuryLight);
+scene.add(mercuryLight.target);
+
+const mercuryLightHelper = new THREE.SpotLightHelper(mercuryLight);
+//scene.add(mercuryLightHelper);
 
 function animate() {
     requestAnimationFrame(animate);
