@@ -22,7 +22,7 @@ controls.maxDistance = 15000;
 controls.enableDamping = true;
 
 const starTexture = new TextureLoader().load('textures/galaxy.png');
-const starGeometry = new THREE.SphereGeometry(8000, 100, 100);
+const starGeometry = new THREE.SphereGeometry(9000, 100, 100);
 const starMaterial = new THREE.MeshBasicMaterial({
   map : starTexture,
   side: THREE.BackSide
@@ -58,6 +58,10 @@ Orbit.add(pivot1);
 Orbit.add(pivot2);
 Orbit.add(pivot3);
 Orbit.add(pivot4);
+
+var moonOrbit = new THREE.Object3D();
+
+pivot4.add(moonOrbit);
 
 const loader = new GLTFLoader();
 loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
@@ -283,12 +287,71 @@ loader.load('3D-resource/Earth.glb', function (gltf) {
     }
 );
 
+/*var eros;
+loader.load('3D-resource/Eros.glb', function (gltf) {
+        eros = gltf.scene;
+        eros.scale.set(75, 75, 75);
+        eros.position.set(-6500, 500, -6500);
+        eros.rotation.y = 10;
+
+        pivot1.add(eros);
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
+const erosSpotLight = new THREE.SpotLight( 0xffffff, 25, 500, 200);
+erosSpotLight.position.set(-6500, 1500, -6500);
+erosSpotLight.castShadow = true;
+erosSpotLight.shadow.mapSize.width = 1024;
+erosSpotLight.shadow.mapSize.height = 1024;
+erosSpotLight.shadow.camera.near = 500;
+erosSpotLight.shadow.camera.far = 4000;
+erosSpotLight.shadow.camera.fov = 30;
+erosSpotLight.target.position.set(-6500, 500, -6500);
+erosSpotLight.target.updateMatrixWorld();
+
+scene.add(erosSpotLight);
+scene.add(erosSpotLight.target);
+
+const erosSpotLightHelper = new THREE.SpotLightHelper(erosSpotLight);
+scene.add(erosSpotLightHelper);*/
+
 const earthText = new SpriteText('Earth', 50);
 earthText.color = 'lightgray';
 earthText.position.x = -5200;
 earthText.position.y = 540;
 earthText.position.z = -5000;
 pivot4.add(earthText);
+
+var moon;
+loader.load('3D-resource/Moon.glb', function (gltf) {
+        moon = gltf.scene;
+        moon.scale.set(0.1, 0.1, 0.1);
+        moon.position.set(-5750, 0, -5750);
+        //moon.rotation.y = 10;
+
+        scene.add(moon);
+        //scene.updateWorldMatrix(true, true);
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
+const moonText = new SpriteText('Moon', 50);
+moonText.color = 'lightgray';
+moonText.position.x = -5850;
+moonText.position.y = 200;
+moonText.position.z = -5750;
+scene.add(moonText);
 
 function animate() {
     requestAnimationFrame(animate);
@@ -311,6 +374,10 @@ function animate() {
 
     if (earth) {
         earth.rotation.y += 0.00035;
+    }
+    
+    if (moon) {
+        moon.rotation.y += 0.00035;
     }
     
     controls.update();
