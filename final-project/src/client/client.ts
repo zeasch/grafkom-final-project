@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Sphere, SphereGeometry, TetrahedronBufferGeometry, TextureLoader } from 'three';
+import { Sphere, SphereGeometry, sRGBEncoding, TetrahedronBufferGeometry, TextureLoader } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import SpriteText from 'three-spritetext';
@@ -17,12 +17,12 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.addEventListener('change', () => console.log("Controls Change"));
-controls.minDistance = 10;
-controls.maxDistance = 10000;
+controls.minDistance = 0;
+controls.maxDistance = 15000;
 controls.enableDamping = true;
 
 const starTexture = new TextureLoader().load('textures/galaxy.png');
-const starGeometry = new THREE.SphereGeometry(6000, 100, 100);
+const starGeometry = new THREE.SphereGeometry(8000, 100, 100);
 const starMaterial = new THREE.MeshBasicMaterial({
   map : starTexture,
   side: THREE.BackSide
@@ -48,8 +48,16 @@ pivot1.rotation.y = 0;
 var pivot2 = new THREE.Object3D();
 pivot2.rotation.y = 100;
 
+var pivot3 = new THREE.Object3D();
+pivot3.rotation.y = 200;
+
+var pivot4 = new THREE.Object3D();
+pivot4.rotation.y = 300;
+
 Orbit.add(pivot1);
 Orbit.add(pivot2);
+Orbit.add(pivot3);
+Orbit.add(pivot4);
 
 const loader = new GLTFLoader();
 loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
@@ -68,7 +76,7 @@ loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
         venus.name = 'venus';
         //venus.userData.isContainer = true
 
-        scene.add(venus);
+        pivot3.add(venus);
         
     },
     function (xhr) {
@@ -142,7 +150,7 @@ venusText.color = 'lightgray';
 venusText.position.x = -3600;
 venusText.position.y = 535;
 venusText.position.z = -3500;
-scene.add(venusText);
+pivot3.add(venusText);
 
 var element = document.getElementById('button');
 //element.addEventListener("click", fungsianimasi)
@@ -251,19 +259,58 @@ scene.add(mercuryLight.target);
 const mercuryLightHelper = new THREE.SpotLightHelper(mercuryLight);
 //scene.add(mercuryLightHelper);
 
+var earth;
+const earthMap = new TextureLoader().load('textures/earth-texture.jpg');
+earthMap.encoding = sRGBEncoding;
+earthMap.flipY = false;
+
+loader.load('3D-resource/Earth.glb', function (gltf) {
+        earth = gltf.scene;
+        earth.position.set(-5000, 0, -5000);
+        earth.traverse((e) => {
+            if (e.isMesh) {
+                //e.material.map = earthMap;
+                e.material.needsUpdate = true;
+            }
+        });
+        pivot4.add(earth);
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
+const earthText = new SpriteText('Earth', 50);
+earthText.color = 'lightgray';
+earthText.position.x = -5200;
+earthText.position.y = 540;
+earthText.position.z = -5000;
+pivot4.add(earthText);
+
 function animate() {
     requestAnimationFrame(animate);
 
     starMesh.rotation.y -= 0.0005;
     if (venus) {
-        venus.rotation.y -= 0.00025;
+        venus.rotation.y -= 0.00035;
     }
     fogMesh.rotation.y -= 0.00065;
 
     Orbit.rotation.y += 0.00025;
 
     if (sun) {
-        sun.rotation.y -= 0.00025;
+        sun.rotation.y -= 0.00035;
+    }
+
+    if (mercury) {
+        mercury.rotation.y += 0.00035;
+    }
+
+    if (earth) {
+        earth.rotation.y += 0.00035;
     }
     
     controls.update();
