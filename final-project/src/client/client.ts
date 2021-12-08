@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Sphere, SphereGeometry, sRGBEncoding, TetrahedronBufferGeometry, TextureLoader } from 'three';
+import { MathUtils, Sphere, SphereGeometry, sRGBEncoding, TetrahedronBufferGeometry, TextureLoader } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import SpriteText from 'three-spritetext';
@@ -18,11 +18,11 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.addEventListener('change', () => console.log("Controls Change"));
 controls.minDistance = 0;
-controls.maxDistance = 15000;
+controls.maxDistance = 18500;
 controls.enableDamping = true;
 
 const starTexture = new TextureLoader().load('textures/galaxy.png');
-const starGeometry = new THREE.SphereGeometry(9000, 100, 100);
+const starGeometry = new THREE.SphereGeometry(13500, 100, 100);
 const starMaterial = new THREE.MeshBasicMaterial({
   map : starTexture,
   side: THREE.BackSide
@@ -46,18 +46,38 @@ var pivot1 = new THREE.Object3D();
 pivot1.rotation.y = 0;
 
 var pivot2 = new THREE.Object3D();
-pivot2.rotation.y = 100;
+pivot2.rotation.y = 200;
 
 var pivot3 = new THREE.Object3D();
-pivot3.rotation.y = 200;
+pivot3.rotation.y = 400;
 
 var pivot4 = new THREE.Object3D();
-pivot4.rotation.y = 300;
+pivot4.rotation.y = 600;
+
+var pivot5 = new THREE.Object3D();
+pivot5.rotation.y = 800;
+
+var pivot6 = new THREE.Object3D();
+pivot6.rotation.y = 1000;
+
+var pivot7 = new THREE.Object3D();
+pivot7.rotation.y = 1200;
+
+var pivot8 = new THREE.Object3D();
+pivot8.rotation.y = 1400;
+
+var pivot9 = new THREE.Object3D();
+pivot9.rotation.y = 1600;
 
 Orbit.add(pivot1);
 Orbit.add(pivot2);
 Orbit.add(pivot3);
 Orbit.add(pivot4);
+Orbit.add(pivot5);
+Orbit.add(pivot6);
+Orbit.add(pivot7);
+Orbit.add(pivot8);
+Orbit.add(pivot9);
 
 var moonOrbit = new THREE.Object3D();
 
@@ -66,7 +86,9 @@ pivot4.add(moonOrbit);
 const loader = new GLTFLoader();
 loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
         venus = gltf.scene;
-        venus.position.set(-3500, 0, -3500);
+        venus.position.set(-2500, 0, -2500);
+        venus.scale.set(0.5, 0.5, 0.5);
+        venus.rotation.x = MathUtils.degToRad(-177.4);
         venus.traverse((o) => {
             if (o.isMesh) {
                 o.material.map = venusMap;
@@ -122,6 +144,14 @@ fogMesh.position.set(-3000, 0, -3000);
 const ambientlight = new THREE.AmbientLight(0xffffff);
 scene.add(ambientlight);
 
+const pointLight = new THREE.PointLight( 0xffffff, 1, 0, 2 );
+pointLight.position.set( 0, 0, 0 );
+scene.add( pointLight );
+
+const sphereSize = 250;
+const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
+//scene.add( pointLightHelper );
+
 const spotLight = new THREE.SpotLight( 0xffffff, 25, 300, 100);
 spotLight.position.set( -1000, 250, -1000 );
 spotLight.castShadow = true;
@@ -151,9 +181,9 @@ scene.add( axesHelper );
 
 const venusText = new SpriteText('Venus', 50);
 venusText.color = 'lightgray';
-venusText.position.x = -3600;
-venusText.position.y = 535;
-venusText.position.z = -3500;
+venusText.position.x = -2600;
+venusText.position.y = 300;
+venusText.position.z = -2500;
 pivot3.add(venusText);
 
 var element = document.getElementById('button');
@@ -210,8 +240,9 @@ mercuryBumpMap.flipY = false;
 //const mercuryLoader = new GLTFLoader();
 loader.load('3D-resource/Mercury.glb', function(gltf) {
         mercury = gltf.scene;
-        //mercury.scale.set(90, 90, 90);
-        mercury.position.set(-2000, 0, -2000);
+        mercury.scale.set(0.5, 0.5, 0.5);
+        mercury.position.set(-1500, 0, -1500);
+        mercury.rotation.x = MathUtils.degToRad(-0.03);
         mercury.traverse((m) => {
             if (m.isMesh) {
                 //m.material.map = mercuryMap;
@@ -234,9 +265,9 @@ loader.load('3D-resource/Mercury.glb', function(gltf) {
 
 const mercuryText = new SpriteText('Mercury', 50);
 mercuryText.color = 'lightgray';
-mercuryText.position.x = -2250;
-mercuryText.position.y = 550;
-mercuryText.position.z = -2000;
+mercuryText.position.x = -1600;
+mercuryText.position.y = 300;
+mercuryText.position.z = -1500;
 pivot2.add(mercuryText);
 
 const sunText = new SpriteText('Sun', 50);
@@ -270,7 +301,9 @@ earthMap.flipY = false;
 
 loader.load('3D-resource/Earth.glb', function (gltf) {
         earth = gltf.scene;
-        earth.position.set(-5000, 0, -5000);
+        earth.position.set(-3500, 0, -3500);
+        earth.scale.set(0.5, 0.5, 0.5);
+        earth.rotation.x = MathUtils.degToRad(-23.4);
         earth.traverse((e) => {
             if (e.isMesh) {
                 //e.material.map = earthMap;
@@ -323,19 +356,19 @@ scene.add(erosSpotLightHelper);*/
 
 const earthText = new SpriteText('Earth', 50);
 earthText.color = 'lightgray';
-earthText.position.x = -5200;
-earthText.position.y = 540;
-earthText.position.z = -5000;
+earthText.position.x = -3600;
+earthText.position.y = 300;
+earthText.position.z = -3500;
 pivot4.add(earthText);
 
 var moon;
 loader.load('3D-resource/Moon.glb', function (gltf) {
         moon = gltf.scene;
         moon.scale.set(0.1, 0.1, 0.1);
-        moon.position.set(-5750, 0, -5750);
+        moon.position.set(-3850, 0, -3850);
         //moon.rotation.y = 10;
 
-        scene.add(moon);
+        moonOrbit.add(moon);
         //scene.updateWorldMatrix(true, true);
     },
     function (xhr) {
@@ -348,10 +381,125 @@ loader.load('3D-resource/Moon.glb', function (gltf) {
 
 const moonText = new SpriteText('Moon', 50);
 moonText.color = 'lightgray';
-moonText.position.x = -5850;
-moonText.position.y = 200;
-moonText.position.z = -5750;
-scene.add(moonText);
+moonText.position.x = -3950;
+moonText.position.y = 150;
+moonText.position.z = -3850;
+moonOrbit.add(moonText);
+
+var mars;
+loader.load('3D-resource/Mars.glb', function (gltf) {
+        mars = gltf.scene;
+        mars.scale.set(0.5, 0.5, 0.5);
+        mars.position.set(-4500, 0, -4500);
+        mars.rotation.x = MathUtils.degToRad(-25.2);
+        pivot5.add(mars);
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
+const marsText = new SpriteText('Mars', 50);
+marsText.color = 'lightgray';
+marsText.position.x = -4600;
+marsText.position.y = 300;
+marsText.position.z = -4500;
+pivot5.add(marsText);
+
+var jupiter;
+loader.load('3D-resource/Jupiter.glb', function (gltf) {
+        jupiter = gltf.scene;
+        jupiter.scale.set(0.75, 0.75, 0.75);
+        jupiter.position.set(-5500, 0, -5500);
+        jupiter.rotation.x = MathUtils.degToRad(-3.1);
+        pivot6.add(jupiter);
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
+const jupText = new SpriteText('Jupiter', 50);
+jupText.color = 'lightgray';
+jupText.position.x = -5600;
+jupText.position.y = 400;
+jupText.position.z = -5500;
+pivot6.add(jupText);
+
+var saturn;
+loader.load('3D-resource/Saturn.glb', function (gltf) {
+        saturn = gltf.scene;
+        saturn.scale.set(0.75, 0.75, 0.75);
+        saturn.position.set(-6500, 0, -6500);
+        saturn.rotation.x = MathUtils.degToRad(-26.7);
+        pivot7.add(saturn);
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
+const satText = new SpriteText('Saturn', 50);
+satText.color = 'lightgray';
+satText.position.x = -6600;
+satText.position.y = 500;
+satText.position.z = -6500;
+pivot7.add(satText);
+
+var uranus;
+loader.load('3D-resource/Uranus.glb', function (gltf) {
+        uranus = gltf.scene;
+        uranus.scale.set(0.75, 0.75, 0.75);
+        uranus.position.set(-7500, 0, -7500);
+        uranus.rotation.x = MathUtils.degToRad(-97.8);
+        pivot8.add(uranus);
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
+const uraText = new SpriteText('Uranus', 50);
+uraText.color = 'lightgray';
+uraText.position.x = -7600;
+uraText.position.y = 450;
+uraText.position.z = -7500;
+pivot8.add(uraText);
+
+var neptune;
+loader.load('3D-resource/Neptune.glb', function (gltf) {
+        neptune = gltf.scene;
+        neptune.scale.set(0.75, 0.75, 0.75);
+        neptune.position.set(-8500, 0, -8500);
+        neptune.rotation.x = MathUtils.degToRad(-28.3);
+        pivot9.add(neptune);
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
+const nepText = new SpriteText('Neptune', 50);
+nepText.color = 'lightgray';
+nepText.position.x = -8600;
+nepText.position.y = 450;
+nepText.position.z = -8500;
+pivot9.add(nepText);
 
 function animate() {
     requestAnimationFrame(animate);
@@ -378,6 +526,26 @@ function animate() {
     
     if (moon) {
         moon.rotation.y += 0.00035;
+    }
+
+    if (mars) {
+        mars.rotation.y += 0.00035;
+    }
+
+    if (jupiter) {
+        jupiter.rotation.y += 0.00035;
+    }
+
+    if (saturn) {
+        saturn.rotation.y += 0.00035;
+    }
+
+    if (uranus) {
+        uranus.rotation.y += 0.00035;
+    }
+
+    if (neptune) {
+        neptune.rotation.y += 0.00035;
     }
     
     controls.update();
