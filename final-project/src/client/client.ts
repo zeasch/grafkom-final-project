@@ -8,7 +8,7 @@ import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRe
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(55,window.innerWidth/window.innerHeight,45,30000);
-camera.position.set(-1000, 0, 5000);
+camera.position.set(-1000, 500, 5000);
 
 const renderer = new THREE.WebGLRenderer({
     antialias:true });
@@ -80,7 +80,6 @@ Orbit.add(pivot8);
 Orbit.add(pivot9);
 
 var moonOrbit = new THREE.Object3D();
-
 pivot4.add(moonOrbit);
 
 const loader = new GLTFLoader();
@@ -186,9 +185,6 @@ venusText.position.y = 300;
 venusText.position.z = -2500;
 pivot3.add(venusText);
 
-var element = document.getElementById('button');
-//element.addEventListener("click", fungsianimasi)
-
 var sun;
 const sunTexture = new TextureLoader().load('textures/sun-texture.jpg');
 sunTexture.encoding = THREE.sRGBEncoding;
@@ -272,9 +268,9 @@ pivot2.add(mercuryText);
 
 const sunText = new SpriteText('Sun', 50);
 sunText.color = 'lightgray';
-sunText.position.x = 500;
+sunText.position.x = 400;
 sunText.position.y = 535;
-sunText.position.z = 0;
+sunText.position.z = 400;
 scene.add(sunText);
 
 const mercuryLight = new THREE.SpotLight(0xffffff, 25, 400, 200);
@@ -500,6 +496,255 @@ nepText.position.x = -8600;
 nepText.position.y = 450;
 nepText.position.z = -8500;
 pivot9.add(nepText);
+
+var element1 = document.getElementById('button-sun');
+element1.addEventListener("click", sunDetail);
+
+function sunDetail() {
+    camera.position.set(-1000, 0, -1000);
+    scene.remove(sunText);
+    document.getElementById('mainTitle').style.display = 'none';
+    document.getElementById('mainPar').style.display = 'none';
+    document.getElementById('button-sun').style.display = 'none';
+    document.getElementById('sunTitle').style.display ='block';
+    document.getElementById('sunPar').style.display ='block';
+    document.getElementById('button-psp').style.display ='block';
+}
+
+var element2 = document.getElementById('button-psp');
+element2.addEventListener("click", pspDetail);
+
+function pspDetail() {
+    camera.position.set(-1050, 0, -1150);
+    pivot1.remove(SimpleText);
+    pivot1.remove(PSP);
+    pivot1.remove(spotLight);
+    pivot1.remove(spotLight.target);
+    scene.add(PSP);
+    scene.add(spotLight);
+    scene.add(spotLight.target);
+    scene.add(sunText);
+    document.getElementById('sunTitle').style.display ='none';
+    document.getElementById('sunPar').style.display ='none';
+    document.getElementById('button-psp').style.display ='none';
+    document.getElementById('pspTitle').style.display = 'block';
+    document.getElementById('pspPar').style.display = 'block';
+    document.getElementById('button-mercury').style.display = 'block';
+}
+
+var element3 = document.getElementById('button-mercury');
+element3.addEventListener("click", merDetail);
+
+function merDetail() {
+    scene.remove(PSP);
+    scene.remove(spotLight);
+    scene.remove(spotLight.target);
+    pivot1.add(SimpleText);
+    pivot1.add(PSP);
+    pivot1.add(spotLight);
+    pivot1.add(spotLight.target);
+    camera.position.set(-2000, 0, -2000);
+    pivot2.remove(mercury);
+    pivot2.remove(mercuryText);
+    scene.add(mercury);
+    document.getElementById('pspTitle').style.display = 'none';
+    document.getElementById('pspPar').style.display = 'none';
+    document.getElementById('button-mercury').style.display = 'none';
+    document.getElementById('merTitle').style.display = 'block';
+    document.getElementById('merPar').style.display = 'block';
+    document.getElementById('button-venus').style.display = 'block';
+}
+
+var element4 = document.getElementById('button-venus');
+element4.addEventListener("click", venDetail);
+
+function venDetail() {
+    scene.remove(mercury);
+    pivot2.add(mercury);
+    pivot2.add(mercuryText);
+    camera.position.set(-3000, 0, -3000);
+    pivot3.remove(venus);
+    pivot3.remove(venusText);
+    scene.add(venus);
+    document.getElementById('merTitle').style.display = 'none';
+    document.getElementById('merPar').style.display = 'none';
+    document.getElementById('button-venus').style.display = 'none';
+    document.getElementById('venTitle').style.display = 'block';
+    document.getElementById('venPar').style.display = 'block';
+    document.getElementById('button-earth').style.display = 'block';
+}
+
+var element5 = document.getElementById('button-earth');
+element5.addEventListener("click", ethDetail);
+
+function ethDetail() {
+    scene.remove(venus);
+    pivot3.add(venus);
+    pivot3.add(venusText);
+    camera.position.set(-3900, 0, -3900);
+    pivot4.remove(earth);
+    pivot4.remove(earthText);
+    scene.add(earth);
+    moonOrbit.remove(moon);
+    moonOrbit.remove(moonText);
+    scene.add(moon);
+    scene.add(moonText);
+    document.getElementById('venTitle').style.display = 'none';
+    document.getElementById('venPar').style.display = 'none';
+    document.getElementById('button-earth').style.display = 'none';
+    document.getElementById('ethTitle').style.display = 'block';
+    document.getElementById('ethPar').style.display = 'block';
+    document.getElementById('button-moon').style.display = 'block';
+}
+
+var element6 = document.getElementById('button-moon');
+element6.addEventListener("click", moonDetail);
+
+function moonDetail() {
+    pivot4.remove(earth);
+    pivot4.remove(earthText);
+    scene.add(earth);
+    scene.add(earthText);
+    moonOrbit.remove(moon);
+    moonOrbit.remove(moonText);
+    pivot4.remove(moonText);
+    scene.remove(moonText);
+    scene.add(moon);
+    camera.position.set(-4050, 0, -4050);
+    document.getElementById('ethTitle').style.display = 'none';
+    document.getElementById('ethPar').style.display = 'none';
+    document.getElementById('button-moon').style.display = 'none';
+    document.getElementById('moonTitle').style.display = 'block';
+    document.getElementById('moonPar').style.display = 'block';
+    document.getElementById('button-mars').style.display = 'block';
+}
+
+var element7 = document.getElementById('button-mars');
+element7.addEventListener("click", marsDetail);
+
+function marsDetail() {
+    scene.remove(moon);
+    moonOrbit.add(moon);
+    moonOrbit.add(moonText);
+    scene.remove(earth);
+    pivot4.add(earth);
+    scene.remove(earthText);
+    pivot4.add(earthText);
+    camera.position.set(-5000, 0, -5000);
+    pivot5.remove(mars);
+    scene.add(mars);
+    pivot5.remove(marsText);
+    document.getElementById('moonTitle').style.display = 'none';
+    document.getElementById('moonPar').style.display = 'none';
+    document.getElementById('button-mars').style.display = 'none';
+    document.getElementById('marsTitle').style.display = 'block';
+    document.getElementById('marsPar').style.display = 'block';
+    document.getElementById('button-jupiter').style.display = 'block';
+}
+
+var element8 = document.getElementById('button-jupiter');
+element8.addEventListener("click", jupDetail);
+
+function jupDetail() {
+    scene.remove(mars);
+    pivot5.add(mars);
+    pivot5.remove(marsText);
+    camera.position.set(-6250, 0, -6250);
+    pivot6.remove(jupiter);
+    pivot6.remove(jupText);
+    scene.add(jupiter);
+    document.getElementById('marsTitle').style.display = 'none';
+    document.getElementById('marsPar').style.display = 'none';
+    document.getElementById('button-jupiter').style.display = 'none';
+    document.getElementById('jupTitle').style.display = 'block';
+    document.getElementById('jupPar').style.display = 'block';
+    document.getElementById('button-saturn').style.display = 'block';
+}
+
+var element9 = document.getElementById('button-saturn');
+element9.addEventListener("click", satDetail);
+
+function satDetail() {
+    scene.remove(jupiter);
+    pivot6.add(jupiter);
+    pivot6.add(jupText);
+    camera.position.set(-7250, 0, -7250);
+    pivot7.remove(saturn);
+    pivot7.remove(satText);
+    scene.add(saturn);
+    document.getElementById('jupTitle').style.display = 'none';
+    document.getElementById('jupPar').style.display = 'none';
+    document.getElementById('button-saturn').style.display = 'none';
+    document.getElementById('satTitle').style.display = 'block';
+    document.getElementById('satPar').style.display = 'block';
+    document.getElementById('button-uranus').style.display = 'block';
+}
+
+var element10 = document.getElementById('button-uranus');
+element10.addEventListener("click", uraDetail);
+
+function uraDetail() {
+    scene.remove(saturn);
+    pivot7.add(saturn);
+    pivot7.add(satText);
+    camera.position.set(-8250, 0, -8250);
+    pivot8.remove(uranus);
+    pivot8.remove(uraText);
+    scene.add(uranus);
+    document.getElementById('satTitle').style.display = 'none';
+    document.getElementById('satPar').style.display = 'none';
+    document.getElementById('button-uranus').style.display = 'none';
+    document.getElementById('uraTitle').style.display = 'block';
+    document.getElementById('uraPar').style.display = 'block';
+    document.getElementById('button-neptune').style.display = 'block';
+}
+
+var element11 = document.getElementById('button-neptune');
+element11.addEventListener("click", nepDetail);
+
+function nepDetail() {
+    scene.remove(uranus);
+    pivot8.add(uranus);
+    pivot8.add(uraText);
+    camera.position.set(-9250, 0, -9250);
+    pivot9.remove(neptune);
+    pivot9.remove(nepText);
+    scene.add(neptune);
+    document.getElementById('uraTitle').style.display = 'none';
+    document.getElementById('uraPar').style.display = 'none';
+    document.getElementById('button-neptune').style.display = 'none';
+    document.getElementById('nepTitle').style.display = 'block';
+    document.getElementById('nepPar').style.display = 'block';
+    document.getElementById('button-end').style.display = 'block';
+}
+
+var element12 = document.getElementById('button-end');
+element12.addEventListener("click", end);
+
+function end() {
+    scene.remove(neptune);
+    pivot9.add(neptune);
+    pivot9.add(nepText);
+    
+    document.getElementById('nepTitle').style.display = 'none';
+    document.getElementById('nepPar').style.display = 'none';
+    document.getElementById('button-end').style.display = 'none';
+    document.getElementById('endTitle').style.display = 'block';
+    document.getElementById('button-start').style.display = 'block';
+}
+
+var element13 = document.getElementById('button-start');
+element13.addEventListener("click", reload);
+
+function reload() {
+    camera.position.set(-1000, 500, 5000);
+    document.getElementById('endTitle').style.display = 'none';
+    document.getElementById('button-start').style.display = 'none';
+    document.getElementById('mainTitle').style.display = 'block';
+    document.getElementById('mainPar').style.display = 'block';
+    document.getElementById('button-sun').style.display = 'block';
+
+}
 
 function animate() {
     requestAnimationFrame(animate);

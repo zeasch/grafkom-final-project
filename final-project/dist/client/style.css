@@ -14,7 +14,7 @@ body{
     position: absolute;
     top: 0%;
     left: 0%;
-    width: 100%;
+    width: 75%;
     height: 100vh;
 }
 
@@ -62,7 +62,7 @@ body{
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
     color: rgb(177, 177, 177);
-    width: 85%;
+    width: 65%;
     margin: 1rem 0;
 }
 
@@ -102,7 +102,7 @@ body{
     }
 }
 
-@media only screen and (max-width: 1000px){
+@media only screen and (max-width: 750px){
     .title-container{
         width: 55%;
     }
