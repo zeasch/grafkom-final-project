@@ -3,7 +3,7 @@ import { MathUtils, Sphere, SphereGeometry, sRGBEncoding, TetrahedronBufferGeome
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import SpriteText from 'three-spritetext';
-import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer'
+//import { BloomEffect, EffectComposer, EffectPass, RenderPass, TextureEffect } from 'postprocessing';
 
 const scene = new THREE.Scene();
 
@@ -29,6 +29,82 @@ const starMaterial = new THREE.MeshBasicMaterial({
 });
 const starMesh = new THREE.Mesh(starGeometry, starMaterial);
 scene.add(starMesh);
+
+/*var starGeo, star = [];
+starGeo = new THREE.BufferGeometry();
+for (var i = 0; i < 4000; i++) {
+    star =[
+        Math.random() * 600 - 300,
+        Math.random() * 600 - 300,
+        Math.random() * 600 - 300
+    ]
+    //star.velocity = 0;
+    //star.acceleration = 0.02;
+    starGeo.setAttribute('star', new THREE.Float32BufferAttribute( star, 1 ));
+    starGeo.computeVertexNormals();
+    var starObj = new THREE.Mesh( starGeo, new THREE.MeshNormalMaterial() );
+    scene.add(starObj);
+};
+
+var sprite, starMat;
+sprite = new TextureLoader().load('textures/star.png');
+starMat = new THREE.PointsMaterial({
+    size: 0.5,
+    map: sprite
+});
+
+var stars;
+stars = new THREE.Points(starGeo, starMat);
+scene.add(stars);
+
+var newLoader, cloudGeo, cloudMat, cloud, cloudParticles = [];
+newLoader = new TextureLoader().load('textures/smoke.png', function (texture) {
+    cloudGeo = new THREE.PlaneBufferGeometry(500, 500);
+    cloudMat = new THREE.MeshLambertMaterial({
+        map: texture,
+        transparent: true
+    });
+
+    for (var p = 0; p < 30; p++) {
+        cloud = new THREE.Mesh(cloudGeo, cloudMat);
+        cloud.position.set(
+            Math.random()*800 - 400,
+            Math.random()*600 - 300,
+            Math.random()*500 - 500
+        );
+        cloud.rotation.x = 1.16;
+        cloud.rotation.y = -0.12;
+        cloud.rotation.z = Math.random() * 2 *Math.PI;
+        cloud.material.opacity = 0.55;
+        cloudParticles.push(cloud);
+        scene.add(cloud);
+    };
+});
+
+var textureEffect, composer, effectPass, bloomEffect;
+newLoader.load('textures/stars.jpg', function (texture) {
+    textureEffect = new TextureEffect({
+        blendFunction: textureEffect.BlendFunction.COLOR_DODGE,
+        texture: texture
+    });
+    textureEffect.blendMode.opacity.value = 0.2;
+    
+    bloomEffect = new BloomEffect({
+        blendFunction: bloomEffect.BlendFunction.COLOR_DODGE,
+        kernelSize: bloomEffect.KernelSize.SMALL,
+        useLuminanceFilter: true,
+        luminanceThreshold: 0.5,
+        luminanceSmoothing: 0.6
+    });
+    bloomEffect.blendMode.opacity.value = 1.5;
+
+    effectPass = new EffectPass(camera, textureEffect);
+    effectPass.renderToScreen = true;
+    
+    composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    composer.addPass(effectPass);
+});*/
 
 var venus;
 const venusMap = new TextureLoader().load('textures/venusmap.jpg');
@@ -730,6 +806,7 @@ function end() {
     document.getElementById('nepPar').style.display = 'none';
     document.getElementById('button-end').style.display = 'none';
     document.getElementById('endTitle').style.display = 'block';
+    document.getElementById('endPar').style.display = 'block';
     document.getElementById('button-start').style.display = 'block';
 }
 
@@ -749,7 +826,7 @@ function reload() {
 function animate() {
     requestAnimationFrame(animate);
 
-    starMesh.rotation.y -= 0.0005;
+    //starMesh.rotation.y -= 0.0005;
     if (venus) {
         venus.rotation.y -= 0.00035;
     }
@@ -801,6 +878,10 @@ function animate() {
 function render() {
 
     renderer.render(scene, camera);
+
+    /*cloudParticles.forEach(function (p) {
+        p.rotation.z -=0.001;
+    })*/
 }
 
 animate();
