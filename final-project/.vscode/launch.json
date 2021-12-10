@@ -1,0 +1,32 @@
+{
+    "configurations": [
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "pwa-chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${final-project}"
+        },
+        {
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "request": "attach",
+            "type": "pwa-chrome",
+            "webRoot": "${final-project}"
+        },
+        {
+            "type": "browser-preview",
+            "request": "launch",
+            "name": "Browser Preview: Launch",
+            "url": "http://localhost:3000"
+        },
+
+        {
+            "type": "browser-preview",
+            "request": "attach",
+            "name": "Browser Preview: Attach"
+        }
+        
+
+    ]
+}

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Virtual Space Museum</title>
+        <style>
+            body {
+                overflow: hidden;
+                margin: 0px;
+            }
+        </style>
+
+        <link rel="stylesheet" href="./style.css">
+
+    </head>
+    
+    <body>
+
+        <div class="title-container">
+          <div class="title">
+              <h1 id="mainTitle">YOU HAVE ENTERED VIRTUAL SPACE MUSEUM</h1>
+              <p id="mainPar">Click this button below to start your tour</p>
+              <button id="button-sun" class="btn">Explore Sun</button>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="sunTitle">Sun</h1>
+            <p style="display: none;" id="sunPar">The Sun is a yellow dwarf star, a hot ball of glowing 
+              gases at the heart of our solar system. Its gravity 
+              holds everything from the biggest planets to tiny 
+              debris in its orbit.
+              <br><br><br>
+              <b>STAR-TYPE</b>
+              <br>Yellow dwarf
+              <br><br>
+              <b>AGE</b>
+              <br>~4.5 billion years
+            </p>
+            <button style="display: none;" id="button-psp" class="btn">Explore Parker Solar Probe</button>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="pspTitle">Parker Solar Probe</h1>
+              <p style="display: none;" id="pspPar">NASA's historic Parker 
+            Solar Probe mission is revolutionizing our understanding 
+            of the Sun, where changing conditions can propagate out 
+            into the solar system, affecting Earth and other worlds. 
+            Parker Solar Probe travels through the Sun’s atmosphere, 
+            closer to the surface than any spacecraft before it, 
+            facing brutal heat and radiation conditions to provide 
+            humanity with the closest-ever observations of a star.
+              <br><br><br>
+              <b>LAUNCH</b>
+              <br>August 12, 2018
+              <br><br>
+              <b>LAUNCH SITE</b>
+              <br>Cape Canaveral Air Force Station, Florida
+            </p>
+            <button style="display: none;" id="button-mercury" class="btn">Explore Mercury</button>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="merTitle">Mercury</h1>
+            <p style="display: none;" id="merPar">Mercury—the smallest planet 
+          in our solar system and closest to the Sun—is only slightly larger 
+          than Earth's Moon. Mercury is the fastest planet, zipping 
+          around the Sun every 88 Earth days.
+              <br><br><br>
+              <b>LENGTH OF YEAR</b>
+              <br>88 Earth Days
+              <br><br>
+              <b>MOONS</b>
+              <br>0 Moon
+            </p>
+            <button style="display: none;" id="button-venus" class="btn">Explore Venus</button>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="venTitle">Venus</h1>
+              <p style="display: none;" id="venPar">Venus spins slowly in the 
+                opposite direction from most planets. A thick atmosphere 
+                traps heat in a runaway greenhouse effect, making it the 
+                hottest planet in our solar system.
+                <br><br><br>
+                <b>LENGTH OF YEAR</b>
+                <br>225 Earth Days
+                <br><br>
+                <b>MOONS</b>
+                <br>0 Moon
+              </p>
+              <button style="display: none;" id="button-earth" class="btn">Explore Earth</button>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="ethTitle">Earth</h1>
+              <p style="display: none;" id="ethPar">Earth—our home planet—is 
+                the only place we know of so far that’s inhabited by 
+                living things. It's also the only planet in our solar 
+                system with liquid water on the surface.
+                <br><br><br>
+                <b>LENGTH OF YEAR</b>
+                <br>365 Earth Days
+                <br><br>
+                <b>MOONS</b>
+                <br>1 Moon
+              </p>
+              <button style="display: none;" id="button-moon" class="btn">Explore Moon</button>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="moonTitle">Moon</h1>
+              <p style="display: none;" id="moonPar">Earth's Moon is the only 
+                place beyond Earth where humans have set foot, so far. 
+                The Moon makes our planet more livable by moderating how 
+                much it wobbles on its axis.
+                <br><br><br>
+                <b>LENGTH OF YEAR</b>
+                <br>27 Earth Days
+                <br><br>
+                <b>HUMAN VISITORS</b>
+                <br>24
+              </p>
+              <button style="display: none;" id="button-mars" class="btn">Explore Mars</button>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="marsTitle">Mars</h1>
+              <p style="display: none;" id="marsPar">Mars is a dusty, cold, 
+                desert world with a very thin atmosphere. There is strong 
+                evidence Mars was—billions of years ago—wetter and warmer, 
+                with a thicker atmosphere.
+                <br><br><br>
+                <b>LENGTH OF YEAR</b>
+                <br>687 Earth Days
+                <br><br>
+                <b>MOONS</b>
+                <br>2 Moons
+              </p>
+              <button style="display: none;" id="button-jupiter" class="btn">Explore Jupiter</button>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="jupTitle">Jupiter</h1>
+              <p style="display: none;" id="jupPar">Jupiter is more than twice 
+                as massive than the other planets of our solar system 
+                combined. The giant planet's Great Red spot is a centuries-old 
+                storm bigger than Earth.
+                <br><br><br>
+                <b>LENGTH OF YEAR</b>
+                <br>4,333 Earth Days
+                <br><br>
+                <b>MOONS</b>
+                <br>79 Moons
+              </p>
+              <button style="display: none;" id="button-saturn" class="btn">Explore Saturn</button>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="satTitle">Saturn</h1>
+              <p style="display: none;" id="satPar">Adorned with a dazzling, 
+                complex system of icy rings, Saturn is unique in our solar 
+                system. The other giant planets have rings, but none are as 
+                spectacular as Saturn's.
+                <br><br><br>
+                <b>LENGTH OF YEAR</b>
+                <br>10,759 Earth Days
+                <br><br>
+                <b>MOONS</b>
+                <br>62 Moons
+              </p>
+              <button style="display: none;" id="button-uranus" class="btn">Explore Uranus</button>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="uraTitle">Uranus</h1>
+              <p style="display: none;" id="uraPar">Uranus—seventh planet from 
+                the Sun—rotates at a nearly 90-degree angle from the plane of 
+                its orbit. This unique tilt makes Uranus appear to spin on its 
+                side.
+                <br><br><br>
+                <b>LENGTH OF YEAR</b>
+                <br>30,687 Earth Days
+                <br><br>
+                <b>MOONS</b>
+                <br>27 Moons
+              </p>
+              <button style="display: none;" id="button-neptune" class="btn">Explore Neptune</button>
+          </div>
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="nepTitle">Neptune</h1>
+              <p style="display: none;" id="nepPar">Neptune—the eighth and 
+                most distant major planet orbiting our Sun—is dark, cold and 
+                whipped by supersonic winds. It was the first planet located 
+                through mathematical calculations, rather than by telescope.
+                <br><br><br>
+                <b>LENGTH OF YEAR</b>
+                <br>60,190 Earth Days
+                <br><br>
+                <b>MOONS</b>
+                <br>14 Moons
+              </p>
+              <button style="display: none;" id="button-end" class="btn">End Tour</button>
+          </div>
+        </div>
+        
+        <div class="title-container">
+          <div class="title">
+            <h1 style="display: none;" id="endTitle">Thank You For Visiting!</h1>
+              <p style="display: none;" id="endPar">We hope you enjoyed the 
+                tour. Please visit us again soon.
+                <!--<br><br><br>
+                <b>TEXT HERE</b>
+                <br>???
+                <br><br>
+                <b>TEXT HERE</b>
+                <br>???
+              </p>-->
+              <button style="display: none;" id="button-start" class="btn">Explore Again!</button>
+          </div>
+        </div>
+        
+    
+        <script id="vertexShader" type="x-shader/x-vertex">
+            varying vec3 vNormal;
+            void main() 
+            {
+                vNormal = normalize( normalMatrix * normal );
+                gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+            }
+            </script>
+            
+            <!-- fragment shader a.k.a. pixel shader -->
+            <script id="fragmentShader" type="x-shader/x-vertex"> 
+            varying vec3 vNormal;
+            void main() 
+            {
+                float intensity = pow( 0.7 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) ), 4.0 ); 
+                gl_FragColor = vec4( 1.0, 1.0, 0.0, 0.35 ) * intensity;
+            }
+        </script>
+
+        <script type="module" src="bundle.js"></script>
+    </body>
+</html>
