@@ -12,23 +12,28 @@ camera.position.set(-1000, 500, 5000);
 
 const renderer = new THREE.WebGLRenderer({
     antialias:true });
-renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setSize(window.innerWidth, window.innerHeight);
+//scene.fog = new THREE.FogExp2(0xffffff, 0.0001);
+//renderer.setClearColor(scene.fog.color);
 document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.addEventListener('change', () => console.log("Controls Change"));
 controls.minDistance = 0;
-controls.maxDistance = 18500;
+controls.maxDistance = 20500;
 controls.enableDamping = true;
 
 const starTexture = new TextureLoader().load('textures/galaxy.png');
-const starGeometry = new THREE.SphereGeometry(13500, 100, 100);
+const starGeometry = new THREE.SphereGeometry(15500, 100, 100);
 const starMaterial = new THREE.MeshBasicMaterial({
   map : starTexture,
   side: THREE.BackSide
 });
 const starMesh = new THREE.Mesh(starGeometry, starMaterial);
 scene.add(starMesh);
+
+const ambientlight = new THREE.AmbientLight(0xFFFFFF);
+scene.add(ambientlight);
 
 /*var starGeo, star = [];
 starGeo = new THREE.BufferGeometry();
@@ -55,22 +60,22 @@ starMat = new THREE.PointsMaterial({
 
 var stars;
 stars = new THREE.Points(starGeo, starMat);
-scene.add(stars);
+scene.add(stars);*/
 
-var newLoader, cloudGeo, cloudMat, cloud, cloudParticles = [];
+/*var newLoader, cloudGeo, cloudMat, cloud, cloudParticles = [];
 newLoader = new TextureLoader().load('textures/smoke.png', function (texture) {
-    cloudGeo = new THREE.PlaneBufferGeometry(500, 500);
+    cloudGeo = new THREE.PlaneBufferGeometry(window.innerWidth, window.innerHeight);
     cloudMat = new THREE.MeshLambertMaterial({
         map: texture,
         transparent: true
     });
 
-    for (var p = 0; p < 30; p++) {
+    for (var p = 0; p < 7500; p++) {
         cloud = new THREE.Mesh(cloudGeo, cloudMat);
         cloud.position.set(
-            Math.random()*800 - 400,
-            Math.random()*600 - 300,
-            Math.random()*500 - 500
+            (Math.random()*20000) - 15000,
+            (Math.random()*20000) - 15000,
+            (Math.random()*20000) - 15000
         );
         cloud.rotation.x = 1.16;
         cloud.rotation.y = -0.12;
@@ -215,9 +220,6 @@ const fogMaterial = new THREE.MeshPhongMaterial({
 const fogMesh = new THREE.Mesh(fogGeometry, fogMaterial);
 fogMesh.position.set(-3000, 0, -3000);
 //scene.add(fogMesh);
-
-const ambientlight = new THREE.AmbientLight(0xffffff);
-scene.add(ambientlight);
 
 const pointLight = new THREE.PointLight( 0xffffff, 1, 0, 2 );
 pointLight.position.set( 0, 0, 0 );
@@ -820,7 +822,38 @@ function reload() {
     document.getElementById('mainTitle').style.display = 'block';
     document.getElementById('mainPar').style.display = 'block';
     document.getElementById('button-sun').style.display = 'block';
+}
 
+var mouse = new THREE.Vector2();
+var raycaster = new THREE.Raycaster();
+
+var selected = null;
+
+window.addEventListener('click', onDocumentMouseDown);
+
+function onDocumentMouseDown (event) {
+    event.preventDefault();
+
+    mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+    raycaster.setFromCamera( mouse, camera );
+
+    var intersects = raycaster.intersectObjects( scene.children );
+
+    if (intersects.length > 0) {
+        selected = intersects[0].object;
+        console.log(selected);
+        /*if (selected == sun) {
+            console.log('ini sun');
+            sunDetail();
+            //selected = null;
+        }
+        else if (selected == PSP) {
+            pspDetail();
+            //selected = null;
+        }*/
+    }
 }
 
 function animate() {
