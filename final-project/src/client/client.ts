@@ -3,7 +3,6 @@ import { MathUtils, Sphere, SphereGeometry, sRGBEncoding, TetrahedronBufferGeome
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import SpriteText from 'three-spritetext';
-//import { BloomEffect, EffectComposer, EffectPass, RenderPass, TextureEffect } from 'postprocessing';
 
 const scene = new THREE.Scene();
 
@@ -13,16 +12,16 @@ camera.position.set(-1000, 500, 5000);
 const renderer = new THREE.WebGLRenderer({
     antialias:true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-//scene.fog = new THREE.FogExp2(0xffffff, 0.0001);
-//renderer.setClearColor(scene.fog.color);
 document.body.appendChild(renderer.domElement);
 
+/* --- ORBIT CONTROL --- */ 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.addEventListener('change', () => console.log("Controls Change"));
 controls.minDistance = 0;
 controls.maxDistance = 20500;
 controls.enableDamping = true;
 
+/* ---BACKGROUND --- */
 const starTexture = new TextureLoader().load('textures/galaxy.png');
 const starGeometry = new THREE.SphereGeometry(15500, 100, 100);
 const starMaterial = new THREE.MeshBasicMaterial({
@@ -32,94 +31,15 @@ const starMaterial = new THREE.MeshBasicMaterial({
 const starMesh = new THREE.Mesh(starGeometry, starMaterial);
 scene.add(starMesh);
 
+/* --- LIGHTS --- */
 const ambientlight = new THREE.AmbientLight(0xFFFFFF);
 scene.add(ambientlight);
 
-/*var starGeo, star = [];
-starGeo = new THREE.BufferGeometry();
-for (var i = 0; i < 4000; i++) {
-    star =[
-        Math.random() * 600 - 300,
-        Math.random() * 600 - 300,
-        Math.random() * 600 - 300
-    ]
-    //star.velocity = 0;
-    //star.acceleration = 0.02;
-    starGeo.setAttribute('star', new THREE.Float32BufferAttribute( star, 1 ));
-    starGeo.computeVertexNormals();
-    var starObj = new THREE.Mesh( starGeo, new THREE.MeshNormalMaterial() );
-    scene.add(starObj);
-};
+const pointLight = new THREE.PointLight( 0xffffff, 1, 0, 2 );
+pointLight.position.set( 0, 0, 0 );
+scene.add( pointLight );
 
-var sprite, starMat;
-sprite = new TextureLoader().load('textures/star.png');
-starMat = new THREE.PointsMaterial({
-    size: 0.5,
-    map: sprite
-});
-
-var stars;
-stars = new THREE.Points(starGeo, starMat);
-scene.add(stars);*/
-
-/*var newLoader, cloudGeo, cloudMat, cloud, cloudParticles = [];
-newLoader = new TextureLoader().load('textures/smoke.png', function (texture) {
-    cloudGeo = new THREE.PlaneBufferGeometry(window.innerWidth, window.innerHeight);
-    cloudMat = new THREE.MeshLambertMaterial({
-        map: texture,
-        transparent: true
-    });
-
-    for (var p = 0; p < 7500; p++) {
-        cloud = new THREE.Mesh(cloudGeo, cloudMat);
-        cloud.position.set(
-            (Math.random()*20000) - 15000,
-            (Math.random()*20000) - 15000,
-            (Math.random()*20000) - 15000
-        );
-        cloud.rotation.x = 1.16;
-        cloud.rotation.y = -0.12;
-        cloud.rotation.z = Math.random() * 2 *Math.PI;
-        cloud.material.opacity = 0.55;
-        cloudParticles.push(cloud);
-        scene.add(cloud);
-    };
-});
-
-var textureEffect, composer, effectPass, bloomEffect;
-newLoader.load('textures/stars.jpg', function (texture) {
-    textureEffect = new TextureEffect({
-        blendFunction: textureEffect.BlendFunction.COLOR_DODGE,
-        texture: texture
-    });
-    textureEffect.blendMode.opacity.value = 0.2;
-    
-    bloomEffect = new BloomEffect({
-        blendFunction: bloomEffect.BlendFunction.COLOR_DODGE,
-        kernelSize: bloomEffect.KernelSize.SMALL,
-        useLuminanceFilter: true,
-        luminanceThreshold: 0.5,
-        luminanceSmoothing: 0.6
-    });
-    bloomEffect.blendMode.opacity.value = 1.5;
-
-    effectPass = new EffectPass(camera, textureEffect);
-    effectPass.renderToScreen = true;
-    
-    composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-    composer.addPass(effectPass);
-});*/
-
-var venus;
-const venusMap = new TextureLoader().load('textures/venusmap.jpg');
-venusMap.encoding = THREE.sRGBEncoding;
-venusMap.flipY = false;
-
-const venusDisMap = new TextureLoader().load('textures/venusbump.jpg');
-venusDisMap.encoding = THREE.sRGBEncoding;
-venusDisMap.flipY = false;
-
+/* --- ORBIT MOVEMENT --- */
 const Orbit = new THREE.Object3D();
 scene.add(Orbit);
 
@@ -163,110 +83,24 @@ Orbit.add(pivot9);
 var moonOrbit = new THREE.Object3D();
 pivot4.add(moonOrbit);
 
-const loader = new GLTFLoader();
-loader.load('3D-resource/Venus_1_12103.glb', function (gltf) {
-        venus = gltf.scene;
-        venus.position.set(-2500, 0, -2500);
-        venus.scale.set(0.5, 0.5, 0.5);
-        venus.rotation.x = MathUtils.degToRad(-177.4);
-        venus.traverse((o) => {
-            if (o.isMesh) {
-                o.material.map = venusMap;
-                o.material.bumpMap = venusDisMap;
-                o.material.bumpScale = 0.015;
-                o.material.needsUpdate = true;
-                console.log(o.material);
-                console.log(venusDisMap);
-            }
-        });
-        venus.name = 'venus';
-        //venus.userData.isContainer = true
-
-        pivot3.add(venus);
-        
-    },
-    function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-    },
-    function (error) {
-        console.log(error);
-    }
-);
-
-var PSP;
-loader.load('3D-resource/PSP.glb', function (gltf) {
-    PSP = gltf.scene;
-    PSP.scale.set(25, 25, 25);
-    PSP.position.set(-1000, 0, -1000);
-    PSP.rotation.y = 10;
-
-    pivot1.add( PSP );
-},
-function (xhr) {
-    console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-},
-function (error) {
-    console.log(error);
-}
-);
-
-const fogTexture = new TextureLoader().load('textures/fog.png');
-const fogGeometry = new SphereGeometry(505, 100, 100);
-const fogMaterial = new THREE.MeshPhongMaterial({
-    map: fogTexture,
-    transparent: true,
-    opacity: 0.5
-});
-const fogMesh = new THREE.Mesh(fogGeometry, fogMaterial);
-fogMesh.position.set(-3000, 0, -3000);
-//scene.add(fogMesh);
-
-const pointLight = new THREE.PointLight( 0xffffff, 1, 0, 2 );
-pointLight.position.set( 0, 0, 0 );
-scene.add( pointLight );
-
-const sphereSize = 250;
-const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-//scene.add( pointLightHelper );
-
-const spotLight = new THREE.SpotLight( 0xffffff, 25, 300, 100);
-spotLight.position.set( -1000, 250, -1000 );
-spotLight.castShadow = true;
-spotLight.shadow.mapSize.width = 1024;
-spotLight.shadow.mapSize.height = 1024;
-spotLight.shadow.camera.near = 500;
-spotLight.shadow.camera.far = 4000;
-spotLight.shadow.camera.fov = 30;
-spotLight.target.position.set(-1000, 0, -1000);
-spotLight.target.updateMatrixWorld();
-
-pivot1.add(spotLight);
-pivot1.add(spotLight.target);
-
-const helper = new THREE.SpotLightHelper(spotLight);
-//pivot1.add(helper);
-
-const SimpleText = new SpriteText('Parker Solar Probe', 50);
-SimpleText.color = 'lightgray';
-SimpleText.position.x = -1050;
-SimpleText.position.y = 75;
-SimpleText.position.z = -1000;
-pivot1.add(SimpleText);
-
-const axesHelper = new THREE.AxesHelper( 1000 );
-scene.add( axesHelper );
-
-const venusText = new SpriteText('Venus', 50);
-venusText.color = 'lightgray';
-venusText.position.x = -2600;
-venusText.position.y = 300;
-venusText.position.z = -2500;
-pivot3.add(venusText);
-
+/* --- SUN --- */
 var sun;
 const sunTexture = new TextureLoader().load('textures/sun-texture.jpg');
 sunTexture.encoding = THREE.sRGBEncoding;
 sunTexture.flipY = false;
+
+var sunCustomMaterial = new THREE.ShaderMaterial({
+    uniforms: { },
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragmentShader').textContent,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true
+    
+});
+var sunGeometry = new THREE.SphereGeometry(575, 100, 100);
+var sunGlow = new THREE.Mesh(sunGeometry, sunCustomMaterial);
+scene.add(sunGlow);
 
 const sunLoader = new GLTFLoader();
 sunLoader.load('3D-resource/Sun.glb', function(gltf) {
@@ -289,43 +123,60 @@ sunLoader.load('3D-resource/Sun.glb', function(gltf) {
     }
 );
 
-var sunCustomMaterial = new THREE.ShaderMaterial({
-    uniforms: { },
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragmentShader').textContent,
-        side: THREE.BackSide,
-        blending: THREE.AdditiveBlending,
-        transparent: true
-    
-});
-var sunGeometry = new THREE.SphereGeometry(575, 100, 100);
-var sunGlow = new THREE.Mesh(sunGeometry, sunCustomMaterial);
-scene.add(sunGlow);
+const sunText = new SpriteText('Sun', 50);
+sunText.color = 'lightgray';
+sunText.position.x = 400;
+sunText.position.y = 535;
+sunText.position.z = 400;
+scene.add(sunText);
 
+/* --- PSP ---  */
+var PSP;
+const loader = new GLTFLoader();
+loader.load('3D-resource/PSP.glb', function (gltf) {
+        PSP = gltf.scene;
+        PSP.scale.set(25, 25, 25);
+        PSP.position.set(-1000, 0, -1000);
+        PSP.rotation.y = 10;
+
+        pivot1.add( PSP );
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
+const spotLight = new THREE.SpotLight( 0xffffff, 25, 300, 100);
+spotLight.position.set( -1000, 250, -1000 );
+spotLight.castShadow = true;
+spotLight.shadow.mapSize.width = 1024;
+spotLight.shadow.mapSize.height = 1024;
+spotLight.shadow.camera.near = 500;
+spotLight.shadow.camera.far = 4000;
+spotLight.shadow.camera.fov = 30;
+spotLight.target.position.set(-1000, 0, -1000);
+spotLight.target.updateMatrixWorld();
+
+pivot1.add(spotLight);
+pivot1.add(spotLight.target);
+
+const SimpleText = new SpriteText('Parker Solar Probe', 50);
+SimpleText.color = 'lightgray';
+SimpleText.position.x = -1050;
+SimpleText.position.y = 75;
+SimpleText.position.z = -1000;
+pivot1.add(SimpleText);
+
+/* --- MERCURY --- */
 var mercury;
-const mercuryMap = new TextureLoader().load('textures/mercury-texture.jpg');
-mercuryMap.encoding = THREE.sRGBEncoding;
-//mercuryMap.flipY = false;
-
-const mercuryBumpMap = new TextureLoader().load('textures/mercurybump.jpg');
-mercuryBumpMap.encoding = THREE.sRGBEncoding;
-mercuryBumpMap.flipY = false;
-
-//const mercuryLoader = new GLTFLoader();
 loader.load('3D-resource/Mercury.glb', function(gltf) {
         mercury = gltf.scene;
         mercury.scale.set(0.5, 0.5, 0.5);
         mercury.position.set(-1500, 0, -1500);
         mercury.rotation.x = MathUtils.degToRad(-0.03);
-        mercury.traverse((m) => {
-            if (m.isMesh) {
-                //m.material.map = mercuryMap;
-                //m.material.bumpMap = mercuryBumpMap;
-                m.material.bumpScale = 0.015;
-                m.material.needsUpdate = true;
-                console.log(m.material);
-            }
-        });
         
         pivot2.add(mercury);
     },
@@ -344,46 +195,60 @@ mercuryText.position.y = 300;
 mercuryText.position.z = -1500;
 pivot2.add(mercuryText);
 
-const sunText = new SpriteText('Sun', 50);
-sunText.color = 'lightgray';
-sunText.position.x = 400;
-sunText.position.y = 535;
-sunText.position.z = 400;
-scene.add(sunText);
+/* --- VENUS --- */
+var venus;
+const venusMap = new TextureLoader().load('textures/venusmap.jpg');
+venusMap.encoding = THREE.sRGBEncoding;
+venusMap.flipY = false;
 
-const mercuryLight = new THREE.SpotLight(0xffffff, 25, 400, 200);
-mercuryLight.position.set(-2000, 700, -2000);
-mercuryLight.castShadow = true;
-mercuryLight.shadow.mapSize.width = 1024;
-mercuryLight.shadow.mapSize.height = 1024;
-mercuryLight.shadow.camera.near = 500;
-mercuryLight.shadow.camera.far = 4000;
-mercuryLight.shadow.camera.fov = 30;
-mercuryLight.target.position.set(-2000, 0, -2000);
-mercuryLight.target.updateMatrixWorld();
+const venusDisMap = new TextureLoader().load('textures/venusbump.jpg');
+venusDisMap.encoding = THREE.sRGBEncoding;
+venusDisMap.flipY = false;
 
-//scene.add(mercuryLight);
-scene.add(mercuryLight.target);
 
-const mercuryLightHelper = new THREE.SpotLightHelper(mercuryLight);
-//scene.add(mercuryLightHelper);
+loader.load('3D-resource/Venus.glb', function (gltf) {
+        venus = gltf.scene;
+        venus.position.set(-2500, 0, -2500);
+        venus.scale.set(0.5, 0.5, 0.5);
+        venus.rotation.x = MathUtils.degToRad(-177.4);
+        venus.traverse((o) => {
+            if (o.isMesh) {
+                o.material.map = venusMap;
+                o.material.bumpMap = venusDisMap;
+                o.material.bumpScale = 0.015;
+                o.material.needsUpdate = true;
+                console.log(o.material);
+                console.log(venusDisMap);
+            }
+        });
+        venus.name = 'venus';
 
+        pivot3.add(venus);
+        
+    },
+    function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+    },
+    function (error) {
+        console.log(error);
+    }
+);
+
+const venusText = new SpriteText('Venus', 50);
+venusText.color = 'lightgray';
+venusText.position.x = -2600;
+venusText.position.y = 300;
+venusText.position.z = -2500;
+pivot3.add(venusText);
+
+/* --- EARTH --- */
 var earth;
-const earthMap = new TextureLoader().load('textures/earth-texture.jpg');
-earthMap.encoding = sRGBEncoding;
-earthMap.flipY = false;
-
 loader.load('3D-resource/Earth.glb', function (gltf) {
         earth = gltf.scene;
         earth.position.set(-3500, 0, -3500);
         earth.scale.set(0.5, 0.5, 0.5);
         earth.rotation.x = MathUtils.degToRad(-23.4);
-        earth.traverse((e) => {
-            if (e.isMesh) {
-                //e.material.map = earthMap;
-                e.material.needsUpdate = true;
-            }
-        });
+
         pivot4.add(earth);
     },
     function (xhr) {
@@ -394,40 +259,6 @@ loader.load('3D-resource/Earth.glb', function (gltf) {
     }
 );
 
-/*var eros;
-loader.load('3D-resource/Eros.glb', function (gltf) {
-        eros = gltf.scene;
-        eros.scale.set(75, 75, 75);
-        eros.position.set(-6500, 500, -6500);
-        eros.rotation.y = 10;
-
-        pivot1.add(eros);
-    },
-    function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-    },
-    function (error) {
-        console.log(error);
-    }
-);
-
-const erosSpotLight = new THREE.SpotLight( 0xffffff, 25, 500, 200);
-erosSpotLight.position.set(-6500, 1500, -6500);
-erosSpotLight.castShadow = true;
-erosSpotLight.shadow.mapSize.width = 1024;
-erosSpotLight.shadow.mapSize.height = 1024;
-erosSpotLight.shadow.camera.near = 500;
-erosSpotLight.shadow.camera.far = 4000;
-erosSpotLight.shadow.camera.fov = 30;
-erosSpotLight.target.position.set(-6500, 500, -6500);
-erosSpotLight.target.updateMatrixWorld();
-
-scene.add(erosSpotLight);
-scene.add(erosSpotLight.target);
-
-const erosSpotLightHelper = new THREE.SpotLightHelper(erosSpotLight);
-scene.add(erosSpotLightHelper);*/
-
 const earthText = new SpriteText('Earth', 50);
 earthText.color = 'lightgray';
 earthText.position.x = -3600;
@@ -435,6 +266,7 @@ earthText.position.y = 300;
 earthText.position.z = -3500;
 pivot4.add(earthText);
 
+/* --- MOON --- */
 var moon;
 loader.load('3D-resource/Moon.glb', function (gltf) {
         moon = gltf.scene;
@@ -460,6 +292,7 @@ moonText.position.y = 150;
 moonText.position.z = -3850;
 moonOrbit.add(moonText);
 
+/* --- MARS --- */
 var mars;
 loader.load('3D-resource/Mars.glb', function (gltf) {
         mars = gltf.scene;
@@ -483,6 +316,7 @@ marsText.position.y = 300;
 marsText.position.z = -4500;
 pivot5.add(marsText);
 
+/* --- JUPITER --- */
 var jupiter;
 loader.load('3D-resource/Jupiter.glb', function (gltf) {
         jupiter = gltf.scene;
@@ -506,6 +340,7 @@ jupText.position.y = 400;
 jupText.position.z = -5500;
 pivot6.add(jupText);
 
+/* --- SATURN --- */
 var saturn;
 loader.load('3D-resource/Saturn.glb', function (gltf) {
         saturn = gltf.scene;
@@ -529,6 +364,7 @@ satText.position.y = 500;
 satText.position.z = -6500;
 pivot7.add(satText);
 
+/* --- URANUS --- */
 var uranus;
 loader.load('3D-resource/Uranus.glb', function (gltf) {
         uranus = gltf.scene;
@@ -552,6 +388,7 @@ uraText.position.y = 450;
 uraText.position.z = -7500;
 pivot8.add(uraText);
 
+/* --- NEPTUNE --- */
 var neptune;
 loader.load('3D-resource/Neptune.glb', function (gltf) {
         neptune = gltf.scene;
@@ -575,6 +412,7 @@ nepText.position.y = 450;
 nepText.position.z = -8500;
 pivot9.add(nepText);
 
+/* --- CLICK BUTTON --- */
 var element1 = document.getElementById('button-sun');
 element1.addEventListener("click", sunDetail);
 
@@ -824,47 +662,11 @@ function reload() {
     document.getElementById('button-sun').style.display = 'block';
 }
 
-var mouse = new THREE.Vector2();
-var raycaster = new THREE.Raycaster();
-
-var selected = null;
-
-window.addEventListener('click', onDocumentMouseDown);
-
-function onDocumentMouseDown (event) {
-    event.preventDefault();
-
-    mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-    mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
-
-    raycaster.setFromCamera( mouse, camera );
-
-    var intersects = raycaster.intersectObjects( scene.children );
-
-    if (intersects.length > 0) {
-        selected = intersects[0].object;
-        console.log(selected);
-        /*if (selected == sun) {
-            console.log('ini sun');
-            sunDetail();
-            //selected = null;
-        }
-        else if (selected == PSP) {
-            pspDetail();
-            //selected = null;
-        }*/
-    }
-}
-
 function animate() {
     requestAnimationFrame(animate);
 
-    //starMesh.rotation.y -= 0.0005;
-    if (venus) {
-        venus.rotation.y -= 0.00035;
-    }
-    fogMesh.rotation.y -= 0.00065;
-
+    starMesh.rotation.y -= 0.0005;
+    
     Orbit.rotation.y += 0.00025;
 
     if (sun) {
@@ -873,6 +675,10 @@ function animate() {
 
     if (mercury) {
         mercury.rotation.y += 0.00035;
+    }
+
+    if (venus) {
+        venus.rotation.y -= 0.00035;
     }
 
     if (earth) {
@@ -911,10 +717,6 @@ function animate() {
 function render() {
 
     renderer.render(scene, camera);
-
-    /*cloudParticles.forEach(function (p) {
-        p.rotation.z -=0.001;
-    })*/
 }
 
 animate();
